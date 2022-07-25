@@ -34,7 +34,7 @@ class SettingController extends Controller
         $unit = UnitKerja::all();
         $unit_bidang = UnitKerja::where('id', session('unit_id'))->get();
         $unit_sub = UnitKerja::where('id', session('sub_id'))->get();
-        $posisi = Posisi::all();
+        $posisi = Posisi::orderBy('id','DESC')->take(2)->get();
         $sub_unit = SubUnit::all();
         $subUnit_bidang = SubUnit::where('unit_id', session('unit_id'))->get();
         $subUnit = SubUnit::where('id', session('sub_id'))->get();

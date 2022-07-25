@@ -74,8 +74,12 @@ active
                                         </div>
                                         <div class="form-group mb-3">
                                             <label class="form-label" for="Posisi">{{ __('Posisi') }}</label>
-                                            <select name="posisi_id" id="posisi_id" class="form-control" readonly>
-                                                <option value="3">{{ __('Anggota') }}</option>
+                                            <select name="posisi_id" id="posisi_id" class="form-control">
+                                               
+                                                @foreach($posisi as $posisi)
+                                                <option value="{{ $posisi->posisi_id }}">{{ $posisi->name_posisi }}</option>
+                                               
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="mb-3 form-group">
