@@ -17,8 +17,8 @@ class KepalaSubBidangSeeder extends Seeder
     {
         $user_id = DB::table('users')->where('role', 'kepala sub bidang')->get()->pluck('id');
         $faker = Faker::create();
-        $unit_id = DB::table('unit_kerja')->pluck('id');
-        $sub_id = DB::table('sub_unit')->pluck('id');
+        $unit_id = DB::table('unit_kerja')->where('name_unit', 'Sekretariat')->pluck('id');
+        $sub_id = DB::table('sub_unit')->where('name_sub', 'Keuangan')->pluck('id');
         $posisi_id = DB::table('posisi')->where('name_posisi', 'Kepala Sub Bidang')->pluck('id');
         DB::table('kepala_sub_bidang')->insert([
             'user_id' =>  $faker->randomElement($user_id),
@@ -26,11 +26,6 @@ class KepalaSubBidangSeeder extends Seeder
             'posisi_id' => $faker->randomElement($posisi_id),
             'sub_id' => $faker->randomElement($sub_id),
         ]);
-        DB::table('kepala_sub_bidang')->insert([
-            'user_id' =>  $faker->randomElement($user_id),
-            'unit_id' => $faker->randomElement($unit_id),
-            'posisi_id' => $faker->randomElement($posisi_id),
-            'sub_id' => $faker->randomElement($sub_id),
-        ]);
+       
     }
 }

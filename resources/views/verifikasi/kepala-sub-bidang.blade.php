@@ -31,7 +31,9 @@ active
                                 <th>{{ __('Nama') }}</th>
                                 <th>{{ __('Posisi') }}</th>
                                 <th>{{ __('Aktivitas Harian') }}</th>
+                                <th>{{ __('Dokumen Kegiatan') }}</th>
                                 <th>{{ __('Tindakan') }}</th>
+
                             </tr>
                         </thead>
 
@@ -40,10 +42,12 @@ active
                             @foreach ($profile as $profile)
                                 <tr>
                                     <td class="number"></td>
-                                    <td>{{ $profile['absen']}}</td>
+                                    <td>{{ $profile['NIK']}}</td>
                                     <td>{{ $profile['fullname'] }}</td>
                                     <td>{{ $profile['name_posisi'] }}</td>
                                     <td>{{ $profile['desc_act'] }}</td>
+                                    <td> <a href="{{ url('/act/download', $profile->id) }}" class="btn btn-outline-dark btn-sm">{{ __('download') }}</a></td>
+
                                     <td>
                                         <a href="{{ route('verifikasi.show', ['id' => $profile['user_id']]) }}"style="color: inherit" class="btn btn-outline-success ">
                                             <i class="fa-solid fa-pen-to-square" ></i>
@@ -60,13 +64,9 @@ active
     </main>
     <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyright &copy; Your Website 2022</div>
-                <div>
-                    <a href="#">Privacy Policy</a>
-                    &middot;
-                    <a href="#">Terms &amp; Conditions</a>
-                </div>
+            <div class="d-flex align-items-center justify-content-center small">
+                <div class="text-muted">Supported by PT Multi Media Access | V1.0</div>
+              
             </div>
         </div>
     </footer>

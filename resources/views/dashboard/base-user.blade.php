@@ -8,9 +8,9 @@
     @endphp
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-success">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="/">{{ __('Bapenda') }}</a>
+        <a class="navbar-brand ps-3" href="/">{{ __('Bappenda Bogor') }}</a>
         <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-outline-danger" id="sidebarToggle" href="#!"><i
+        <button class="btn btn-link " id="sidebarToggle" href="#!"><i
                 class="fas fa-bars"></i></button>
     </nav>
     @if( $user_role == "karyawan")
@@ -20,7 +20,7 @@
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion" id="sidenavAccordion" style="background-color: #4F8C6E">
                 <div class="sb-sidenav-menu mt-4 text-white">
-                    <small class="text-white justify-content-center d-flex">{{ __('Logged as ') }}{{ Auth::user()->name }} </small>
+                    <small class="text-white justify-content-center d-flex">{{ __('Login sebagai ') }}{{ Auth::user()->role }} </small>
                         <div class="sidenav-picture d-flex justify-content-center mt-2">
                             <img src="{{ asset('assets/img/users/user-3.png') }}" alt="" style="width: 40%;">
                         </div>
@@ -51,7 +51,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             {{ __('Profil Pegawai') }}
                         </a>
-
+                        
                     </div>
                 </div>
                 <div class="sb-sidenav-footer d-flex justify-content-center">

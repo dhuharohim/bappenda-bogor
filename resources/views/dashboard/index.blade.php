@@ -16,7 +16,7 @@
                     <form action="{{ route('admin.update', ['id' => $profile_admin['id']]) }}" method="post">
                         @csrf
                         <div class="card-header">
-                            <h4>{{ __('Profil Pegawai') }}</h4>
+                            <h4>{{ __('Profil') }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -72,8 +72,8 @@
                                     </div>
                                     <div class=" form-group mb-3">
                                         <label for="quant_desc" class="form-label">{{ __('NIK*') }}</label>
-                                        <input type="number" class="form-control" id="nik" name="nik" required
-                                            value="{{ $profile_admin->nik }}">
+                                        <input type="text" class="form-control" id="NIK" name="NIK" required
+                                            value="{{ $user->NIK }}">
                                     </div>
 
                                 </div>
@@ -174,42 +174,7 @@
 
 
                 </div>
-                <div class="card shadow-dark mb-3 mt-4 w-auto">
-                    <div class="card-header">
-                        <h4>{{ __('Posisi') }}</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3 form-group">
-                                    <label for="unit_kerja" class="form-label">{{ __('Unit Kerja*') }}</label>
-                                    <select name="name_unit" id="name_unit" class="form-control" readonly>
-                                        @foreach ($unit as $unit)
-                                            <option value={{ $unit->id }}>
-                                                {{ $unit->name_unit }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-                            </div>
-                            <div class="col">
-                                <div class="mb-3 form-group">
-                                    <label for="posisi" class="form-label">{{ __('Posisi*') }}</label>
-                                    <select name="name_posisi" id="name_posisi" class="form-control" readonly>
-                                        @foreach ($posisi as $posisi)
-                                            <option value={{ $posisi->id }}>
-                                                {{ $posisi->name_posisi }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+           
 
             </div>
             <div class="card-footer d-flex justify-content-center">

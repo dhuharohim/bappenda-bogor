@@ -32,6 +32,11 @@ active
                                                 required>
                                         </div>
                                         <div class="mb-3">
+                                            <label for="username" class="form-label">{{ __('NIK*') }}</label>
+                                            <input type="text" class="form-control" id="NIK" name="NIK"
+                                                required placeholder="NIK">
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="username" class="form-label">{{ __('Username*') }}</label>
                                             <input type="email" class="form-control" id="email" name="email"
                                                 required placeholder="abc@gmail.com">
@@ -133,15 +138,6 @@ active
             } else {
                 x.type = "password";
             }
-        }
-
-        function change1(){
-                var s1 = document.getElementById('posisi_id');
-                var s2 = document.getElementById('role');
-
-                if(s1.value == 1){
-                    s2.value == 
-                }
         }
     </script>
 @endsection

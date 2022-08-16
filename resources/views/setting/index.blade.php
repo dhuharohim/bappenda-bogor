@@ -5,7 +5,7 @@
 @endsection
 
 @section('setting')
-active
+    active
 @endsection
 
 @section('main-content')
@@ -33,6 +33,11 @@ active
                                         </div>
                                         <div class="mb-3">
                                             <label for="username" class="form-label">{{ __('Username*') }}</label>
+                                            <input type="text" class="form-control" id="NIK" name="NIK"
+                                                required placeholder="NIK">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="username" class="form-label">{{ __('Email*') }}</label>
                                             <input type="email" class="form-control" id="email" name="email"
                                                 required placeholder="abc@gmail.com">
                                         </div>
@@ -42,50 +47,46 @@ active
                                                 required>
                                             <input type="checkbox" onclick="myFunction()"> {{ __('Show Password') }}
                                         </div>
-                                       
+
+
                                     </div>
                                     <div class="col">
-                                        
+
 
                                         <div class="form-group mb-3">
                                             <label class="form-label" for="Posisi">{{ __('Posisi') }}</label>
                                             <select name="posisi_id" id="posisi_id" class="form-control">
-                                                <option value="">{{ __('---Pilih Posisi---') }}</option>
-                                                @foreach ($posisi as $posisi)
-                                                    <option value={{ $posisi->id }}>
-                                                        {{ $posisi->name_posisi }}
+                                                <option value="" disabled selected>{{ __('---Pilih Posisi--') }}
+                                                </option>
+                                                @foreach ($posisi_admin as $posisi_admin)
+                                                    <option value={{ $posisi_admin->id }}>
+                                                        {{ $posisi_admin->name_posisi }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
 
                                         <div class="mb-3 form-group">
-                                            <label for="unitKerja" class="form-label">{{ __('Unit Kerja*') }}</label>
+                                            <label class="form-label" for="Posisi">{{ __('Unit Kerja') }}</label>
                                             <select name="unit_id" id="unit_id" class="form-control">
-                                                <option value="">{{ __('---Pilih Unit Kerja---') }}</option>
-                                                @foreach ($unit as $unit)
-                                                    <option value={{ $unit->id }}>
-                                                        {{ $unit->name_unit }}
-                                                    </option>
-                                                @endforeach
+                                                <option value="" disabled selected>{{ __('---Pilih Unit Kerja---') }}
+                                                </option>
+                                              
                                             </select>
                                         </div>
 
-                                        <div class="mb-3 form-group">
-                                            <label for="subUnit" class="form-label">{{ __('Sub Unit*') }}</label>
+                                        <div class="mb-3 form-group" id="field1">
+                                            <label class="form-label" for="Posisi">{{ __('Sub Unit Kerja') }}</label>
                                             <select name="sub_unit" id="sub_unit" class="form-control">
-                                                <option value="">{{ __('---Pilih Sub Unit Kerja---') }}</option>
-                                                @foreach ($sub_unit as $sub_unit)
-                                                    <option value={{ $sub_unit->id }}>
-                                                        {{ $sub_unit->name_sub }}
-                                                    </option>
-                                                @endforeach
+                                                <option value="" disabled selected>--Pilih Sub Unit Kerja--</option>
+                                                
                                             </select>
                                         </div>
+                                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
                                         <div class="mb-3 form-group">
                                             <label for="hakAkses" class="form-label">{{ __('Hak Akses*') }}</label>
                                             <select name="role" id="role" class="form-control" readonly>
-                                                <option value="karyawan">{{ __('Pegawai') }}</option>
+
                                             </select>
                                         </div>
 
@@ -102,7 +103,7 @@ active
                     <!---Tambah Unit Kerja--->
                     <div class="card mb-4">
                         <div class="card-header">
-                            {{ __('Tambah Unit Kerja dan Posisi') }}
+                            {{ __('Tambah Unit Kerja dan Sub Unit') }}
                         </div>
 
                         <div class="card-body">
@@ -116,8 +117,8 @@ active
                                                 required>
                                         </div>
                                         <div class="mb-3 form-group">
-                                            <label for="name_posisi" class="form-label">{{ __('Nama Posisi*') }}</label>
-                                            <input type="text" class="form-control" id="name_posisi" name="name_posisi"
+                                            <label for="name_posisi" class="form-label">{{ __('Nama Sub Unit Kerja*') }}</label>
+                                            <input type="text" class="form-control" id="name_sub" name="name_sub"
                                                 required>
                                         </div>
 
@@ -138,28 +139,75 @@ active
 
 @section('custom_js')
     <script type="text/javascript">
-        var a = document.getElementsByClassName("number");
-        for (var i = 0; i < a.length; i++) {
-            a[i].innerHTML = (i + 1) + ".";
-        }
-
-        function html_to_xlsx(type) {
-            var data = document.getElementById('datatablesSimple');
-            var file = XLSX.utils.table_to_book(data, {
-                sheet: "sheet1"
-            });
-
-            XLSX.write(file, {
-                bookType: type,
-                bookSST: true,
-                type: 'base64'
-            });
-            XLSX.writeFile(file, 'file.' + type);
-        }
-        const export_xlsx = document.getElementById('export_xlsx');
-        export_xlsx.addEventListener('click', () => {
-            html_to_xlsx('xlsx');
+        $.ajax({
+            url: "/api/ajax_get_kerja",
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function(res) {
+                const unit = res.unit
+                unit.map(units => {
+                    $('#unit_id').append("<option value='" + units.id + "'>" + units.name_unit +
+                        "</option>");
+                })
+            }
         });
+
+        $("#unit_id").change(function() {
+            const id = $("#unit_id").val();
+            console.log(id)
+            $.ajax({
+                url: "/api/ajax_get_sub/" + id,
+                type: 'GET',
+                dataType: 'json', // added data type
+                success: function(res) {
+                    const sub_unit = res.sub_unit
+                    sub_unit.map(sub_units => {
+                        $('#sub_unit').append("<option value='" + sub_units.id + "'>" +
+                            sub_units.name_sub + "</option>");
+                    })
+                }
+            });
+        });
+        $("#posisi_id").change(function() {
+            if ($(this).val() == "1") {
+                $('#field1').hide();
+                $('#field1').attr('required', '');
+                $('#field1').attr('data-error', 'This field is required.');
+            } else {
+                $('#field1').show();
+                $('#field1').removeAttr('required');
+                $('#field1').removeAttr('data-error');
+            }
+        });
+        $("#posisi_id").trigger("change");
+
+        $("#posisi_id").change(function() {
+            if ($(this).val() == "1") {
+                $('#role').append('<option selected value="kepala bidang">Kepala Bidang</option>');
+            } else if ($(this).val() == "2") {
+                $('#role').append('<option selected value="kepala sub bidang">Kepala Sub Bidang</option>');
+            } else if ($(this).val() == "3") {
+                $('#role').append('<option selected value="karyawan">Pegawai</option>');
+            }
+        });
+
+        // $("#unit_id").change(function() {
+        //     console.log($(this).val());
+        //     $("#sub_unit").html('')
+        //     var url = '/setting/' + $(this).val();
+        //     $.ajax({
+        //         type: "get",
+        //         url: url,
+        //         success: function(response) {
+        //             $("#sub_unit").append(`<option value="" disabled selected>--Pilih Sub Unit Kerja--</option>`)
+        //             response.forEach(function(params) {
+        //                 $("#sub_unit").append(`<option value="${params.id}">${params.name_sub}</option>`)
+        //                 // console.log(params.tipe_motor);
+        //             });
+        //         }
+        //     });
+        // });
+
 
         function myFunction() {
             var x = document.getElementById("myPassword");
@@ -169,14 +217,10 @@ active
                 x.type = "password";
             }
         }
+    </script>
+        <script>
+    
 
-        function change1(){
-                var s1 = document.getElementById('posisi_id');
-                var s2 = document.getElementById('role');
-
-                if(s1.value == 1){
-                    s2.value == 
-                }
-        }
+ 
     </script>
 @endsection

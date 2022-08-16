@@ -32,6 +32,9 @@ active
                                         <option value="{{ $user->role }}">{{ $user->role }}</option>
                                         <option value="karyawan">{{ __('Karyawan') }}</option>
                                         <option value="admin">{{ __('Admin') }}</option>
+                                        <option value="kepala bidang">{{ __('Kepala Bidang') }}</option>
+                                        <option value="kepala sub bidang">{{ __('Kepala Sub Bidang') }}</option>
+
                                     </select>
 
                                 </div>

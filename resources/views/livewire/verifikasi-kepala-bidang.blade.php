@@ -14,7 +14,7 @@
     
                     <div class="card-body">
                         <form>
-                            <label for="unit kerja" class="form-group">{{ __('Pilih Unit Kerja') }}</label>
+                            <label for="unit kerja" class="form-group">{{ __('Pilih Sub Unit Kerja') }}</label>
 
                             <select wire:model="pilihan_1" name="pilihUnit" id="pilihUnit" class="form-control">
                                 <option value="">{{ __('-------') }}</option>
@@ -36,6 +36,7 @@
                                     <th>{{ __('Tanggal Aktivitas') }}</th>
                                     <th>{{ __('Aktivitas Harian') }}</th>
                                     <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Alasan') }}</th>
                                 </tr>
                             </thead>
     
@@ -49,8 +50,11 @@
                                         <td>{{ $act['name_posisi'] }}</td>
                                         <td>{{ $act['date_act'] }}</td>
                                         <td>{{ $act['desc_act'] }}</td>
-                                        
-                                      
+                                        @if($act['alasan_act'] != NULL)
+                                        <td>{{ __('') }}</td>
+                                        @else
+                                        <td>{{ $act['alasan_act'] }}</td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

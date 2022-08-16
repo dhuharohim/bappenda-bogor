@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\DaftarUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleController;
@@ -7,6 +8,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InputController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\VerifikasiController;
+use App\Models\Absen;
+use App\Models\DocumentAct;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -48,6 +51,7 @@ Route::prefix('google')->name('google.')->group( function(){
 Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.index');
 Route::get('/verifikasi/show/{id}', [VerifikasiController::class, 'show'])->name('verifikasi.show');
 Route::post('/verifikasi/update/{id}', [VerifikasiController::class, 'update'])->name('verifikasi.update');
+Route::post('/verifikasi/update1/{id}', [VerifikasiController::class, 'update_alasan'])->name('alasan.update');
 
 Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
 Route::get('/setting/access/{id}', [SettingController::class, 'show'])->name('access.index');
@@ -59,4 +63,18 @@ Route::post('/setting/store/unit', [SettingController::class, 'storeunit'])->nam
 Route::get('/daftar-user', [DaftarUserController::class, 'index'])->name('daftar.index');
 Route::get('/daftar-user/ganti/password/{id}', [DaftarUserController::class, 'show'])->name('password.change');
 Route::post('/daftar-user/password/store/{id}', [DaftarUserController::class, 'store'])->name('password.store');
+
+Route::get('/absen', [AbsenController::class, 'index'])->name('absen.index');
+Route::post('/absen/store', [AbsenController::class, 'store'])->name('absen.store');
+
+Route::get('/cuti', [AbsenController::class, 'formSakit'])->name('sakit.index');
+Route::post('/cuti/store', [AbsenController::class, 'storeSakit'])->name('cuti.store');
+
+Route::post('/act/store', [DocumentAct::class,'store'])->name('act.store');
+Route::get('/act/download/{id}', [DashboardController::class, 'downloadAct']);
+Route::get('/contract/download/{id}', [DashboardController::class, 'downloadPro']);
+
+
+Route::get('activity/list', [DashboardController::class, 'getActivity'])->name('activity.list');
+
 

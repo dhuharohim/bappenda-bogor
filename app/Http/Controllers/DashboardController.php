@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Absen;
 use App\Models\Activity;
+use App\Models\CutiSakit;
 use App\Models\Kecamatan;
 use App\Models\Kota;
 use App\Models\Posisi;
@@ -14,10 +16,16 @@ use App\Models\ProfilKepalaSubBidang;
 use App\Models\SubUnit;
 use App\Models\UnitKerja;
 use App\Models\User;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Http\Client\Response as ClientResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response as FacadesResponse;
+use Illuminate\Support\Facades\Storage;
 use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
+use ZipArchive;
+use DataTables;
 
 class DashboardController extends Controller
 {
@@ -34,6 +42,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user_id = Auth::user()->id;
+        $absen_each = Absen::where('user_id', $user_id)->first();
         $user = User::where('id', $user_id)->first();   
         $data = Activity::where('user_id', $user_id)->get();
         $unit = UnitKerja::where('id', $user_id)->get();
@@ -43,6 +52,7 @@ class DashboardController extends Controller
         $profile_admin = ProfilAdmin::where('user_id', $user_id)->first();
         $profile_kepalaKantor = ProfilKepalaKantor::where('user_id', $user_id)->first();
         $profile_kepalaSubBidang = ProfilKepalaSubBidang::where('user_id', $user_id)->first();
+        $cuti = CutiSakit::where('user_id',$user_id)->first();
         $kota_bogor = Kota::whereIn('name', 
         [
             'KABUPATEN BOGOR', 'KABUPATEN BEKASI', 'KOTA DEPOK'
@@ -158,23 +168,7 @@ class DashboardController extends Controller
         }
         else{
             return view('dashboard.index-user', ['data' => $data, 
-            'kota_bogor' => $kota_bogor,
-            'kota_jaksel' => $kota_jaksel, 
-            'kota_banten' => $kota_banten, 
-            'kecamatan_jaksel' => $kecamatan_jaksel, 
-            'kecamatan_jaktim' => $kecamatan_jaktim,
-            'kecamatan_jakbar' => $kecamatan_jakbar,
-            'kecamatan_jakpus' => $kecamatan_jakpus,
-            'kecamatan_jakut' => $kecamatan_jakut,
-
-            'kecamatan_bogor' => $kecamatan_bogor,
-            'kecamatan_bekasi' => $kecamatan_bekasi,
-            'kecamatan_depok' => $kecamatan_depok,
-
-            'kecamatan_tangerang' => $kecamatan_tangerang,
-            'kecamatan_kotang' => $kecamatan_kotang,
-            'kecamatan_serang' => $kecamatan_serang,
-
+            'absen_each'=>$absen_each, 'cuti'=>$cuti,
             'profile'=>$profile, 'user'=>$user, 'unit'=>$unit, 
             'posisi'=>$posisi]);
         }
@@ -257,8 +251,9 @@ class DashboardController extends Controller
         $data = Activity::where('user_id', $user_id)->first();
         $profile = Profile::where('user_id', $user_id)->first();
         $unit = UnitKerja::where('id', $profile->unit_id)->first();
+        $absen_each = Absen::where('user_id', $user_id)->first();
       
-        return view('input.index', ['unit'=>$unit,'data' => $data, 'profile'=>$profile, 'user_id'=>$user_id]);
+        return view('input.index', ['unit'=>$unit,'data' => $data, 'profile'=>$profile, 'user_id'=>$user_id, 'absen_each'=>$absen_each]);
     }
 
 
@@ -275,6 +270,10 @@ class DashboardController extends Controller
         $unit = UnitKerja::where('id', $profile->unit_id)->first();
         $posisi = Posisi::where('id', $profile->posisi_id)->first();
         $sub = SubUnit::where('id', $profile->sub_id)->first();
+
+        $this->validate($request, [
+            'docs_act'=>'required|file|mimes:pdf, ppt,pptx, rar, zip, jpg, jpeg, png,xlsx,xls |max:8192'
+        ]);
         
         $data = new Activity();
         $data->user_id = $user_id;
@@ -284,10 +283,16 @@ class DashboardController extends Controller
         $data->sub_id = $sub->id;
         $data->date_act = $request->date_act;
         $data->desc_act = $request->desc_act;
-        $data->output_act = $request->output_act;
         $data->time_act = $request->time_act;
         $data->quantitiy_act = $request->quantitiy_act;
-        $data->docs_act = $request->docs_act;
+       
+
+        $docs = $request->file('docs_act');
+        $name = 'Dokumen'.$profile->fullname.date('Y-m-d').'.'.$request->file('docs_act')->getClientOriginalExtension();
+        $docs->move('file/dokumenKegiatan',$name);
+        // Storage::disk("public")->put($name, $docs);
+        $data->docs_act = $name;
+
         $data->quant_desc = $request->quant_desc;
         $data->status_act = $request->status_act;
         $data->save();
@@ -297,6 +302,14 @@ class DashboardController extends Controller
         return redirect()->route('dashboard.data', [$data, $profile]);
     }
 
+    public function downloadAct($id){
+        $data = Activity::findOrFail($id);
+        return response()->download(public_path('file/dokumenKegiatan/'.$data->docs_act));
+    }
+    public function downloadPro($id){
+        $profile = Profile::findOrFail($id);
+        return response()->download(public_path('file/dokumenKontrak/'.$profile->docs_contract));
+    }
     public function storeprofile(Request $request)
     {
         $user_id = Auth::user()->id;
@@ -319,6 +332,21 @@ class DashboardController extends Controller
         $profile->save();
         return redirect()->back();
     }
+
+    // public function getActivity(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $data = Activity::latest()->get();
+    //         return Datatables::of($data)
+    //             ->addIndexColumn()
+    //             ->addColumn('action', function($row){
+    //                 $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+    //                 return $actionBtn;
+    //             })
+    //             ->rawColumns(['action'])
+    //             ->make(true);
+    //     }
+    // }
 
     /**
      * Display the specified resource.
@@ -360,19 +388,23 @@ class DashboardController extends Controller
         $profile->status = $request->status;
         $profile->absen = $request->absen;
         $profile->npwp = $request->npwp;
-        $profile->nik = $request->nik;
         $profile->kabupaten = $request->kabupaten;
         $profile->kelurahan = $request->kelurahan;
         $profile->kecamatan = $request->kecamatan;
         $profile->alamat_lengkap = $request->alamat_lengkap;
-        $profile->posisi = $request->posisi;
+
+        $docs = $request->file('docs_contract');
+        $name = 'Dokumen'.$profile->fullname.date('Y-m-d').'.'.$request->file('docs_contract')->getClientOriginalExtension();
+        $docs->move('file/dokumenKontrak',$name);
+        $profile->docs_contract = $name;
         $profile->save();
         return redirect()->back();
     }
 
     public function updateadmin(Request $request, $id)
     {
-        $user_id = Auth::user()->id;       
+        $user_id = Auth::user()->id;
+        $user = User::all();       
         $profile = ProfilAdmin::where('user_id', $user_id)->first();
         $profile->fullname = $request->fullname;
         $profile->birth_date = $request->birth_date;
@@ -381,7 +413,7 @@ class DashboardController extends Controller
         $profile->status = $request->status;
         $profile->absen = $request->absen;
         $profile->npwp = $request->npwp;
-        $profile->nik = $request->nik;
+        $user->NIK = $request->NIK;
         $profile->kabupaten = $request->kabupaten;
         $profile->kelurahan = $request->kelurahan;
         $profile->kecamatan = $request->kecamatan;

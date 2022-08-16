@@ -33,7 +33,7 @@
                                     @foreach($profile as $pro)
                                         <tr>
                                             <td class="number"></td>
-                                            <td>{{ $pro['absen'] }}</td>
+                                            <td>{{ $pro['NIK'] }}</td>
                                             <td>{{ $pro['fullname'] }}</td>
                                             <td>{{ $pro['birth_date'] }}</td>
                                             <td>{{ $pro['npwp'] }}</td>
@@ -59,13 +59,9 @@
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2022</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
+                    <div class="d-flex align-items-center justify-content-center small">
+                        <div class="text-muted">Supported by PT Multi Media Access | V1.0</div>
+                       
                     </div>
                 </div>
             </footer>

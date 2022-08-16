@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -82,7 +82,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'id',
 
     /*
     |--------------------------------------------------------------------------
@@ -108,7 +108,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'id_ID',
 
     /*
     |--------------------------------------------------------------------------
@@ -187,6 +187,7 @@ return [
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
         Laravolt\Indonesia\ServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -211,7 +212,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'Indonesia' => Laravolt\Indonesia\Facade::class
+        'Indonesia' => Laravolt\Indonesia\Facade::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ])->toArray(),
 
 ];

@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
             'name' => "admin",
             'role' => "admin",
             'email' => "admin@bapenda.com",
+            'nik' => 'admin',
             'password' => bcrypt("123"),
         ]);
 
@@ -26,30 +27,21 @@ class UserSeeder extends Seeder
             'name' => "kepala kantor",
             'role' => "kepala kantor",
             'email' => "kepalakantor@bapenda.com",
+            'nik' => '01',
             'password' => bcrypt("123"),
         ]);
         DB::table('users')->insert([
             'name' => "kepala bidang",
             'role' => "kepala bidang",
             'email' => "kepalabidang@bapenda.com",
-            'password' => bcrypt("123"),
-        ]);
-        DB::table('users')->insert([
-            'name' => "kepala bidang1",
-            'role' => "kepala bidang",
-            'email' => "kepalabidang1@bapenda.com",
+            'nik' => '02',
             'password' => bcrypt("123"),
         ]);
         DB::table('users')->insert([
             'name' => "kepala sub bidang",
             'role' => "kepala sub bidang",
             'email' => "kepalasubidang@bapenda.com",
-            'password' => bcrypt("123"),
-        ]);
-        DB::table('users')->insert([
-            'name' => "kepala sub bidang1",
-            'role' => "kepala sub bidang",
-            'email' => "kepalasubidang1@bapenda.com",
+            'nik' => '03',
             'password' => bcrypt("123"),
         ]);
     }

@@ -37,6 +37,9 @@ active
                                 <th>{{ __('Waktu') }}</th>
                                 <th>{{ __('Total Waktu/Hari') }}</th>
                                 <th>{{ __('Status Verifikasi Atasan') }}</th>
+                             
+                                <th>{{ __('Alasan') }}</th>
+                            
                             </tr>
                         </thead>
 
@@ -81,7 +84,29 @@ active
                                             @endif
                                         @endif
                                     </td>
-                                  
+                                   
+                                    <td>
+                                        @if($data->status_act == "Ditolak")
+                                        @if($data->alasan_act == NULL)
+                                     
+                                        <form action="{{ route('alasan.update',['id'=>$data->id]) }}" method="POST">
+                                            @csrf
+                                            <div class="form-group">
+                                                <textarea name="alasan_act" id="alasan_act" class="form-control"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-outline-success btn-sm mt-2"> Submit </button>
+                                        </form>
+                                        @endif
+                                        
+                                        @else
+                                        {{ __('') }}
+                                        @endif
+                                        @if($data->alasan_act != NULL)
+                                        {{ $data['alasan_act'] }}
+                                        @endif
+                                    </td>
+                                
+
                                 </tr>
                             @endforeach
                         </tbody>

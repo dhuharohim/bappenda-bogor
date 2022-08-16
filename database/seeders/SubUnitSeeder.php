@@ -52,12 +52,7 @@ class SubUnitSeeder extends Seeder
             
             
         ]);
-        DB::table('sub_unit')->insert([
-            'unit_id' => $faker->randomElement($unit_2),
-            'name_sub' => 'Keberatan' 
-            
-            
-        ]);
+
         DB::table('sub_unit')->insert([
             'unit_id' => $faker->randomElement($unit_2),
             'name_sub' => 'Kelompok Substansi Evaluasi dan Pengawasan'

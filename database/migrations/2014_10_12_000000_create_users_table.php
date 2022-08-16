@@ -17,11 +17,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->enum('role', ['admin','kepala kantor', 'kepala bidang', 'kepala sub bidang', 'karyawan'])->default('karyawan');
+            $table->string('NIK')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            
         });
     }
 

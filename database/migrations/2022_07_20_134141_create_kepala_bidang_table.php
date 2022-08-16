@@ -44,7 +44,6 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('absen')->nullable();
             $table->string('npwp')->nullable();
-            $table->string('nik')->nullable();
             $table->string('kabupaten')->nullable();
             $table->string('kelurahan')->nullable();
             $table->string('kecamatan')->nullable();

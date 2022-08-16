@@ -26,7 +26,9 @@ class VerifikasiKepalaBidang extends Component
 
         $this->sub = SubUnit::where('unit_id', session('unit_id'))->get();
         $this->activity = Activity::join('profile', 'profile.id','=', 'activity.profile_id')
-            ->join('sub_unit','sub_unit.id','=','activity.unit_id')
+            ->join('unit_kerja','unit_kerja.id','=','activity.unit_id')
+            ->join('posisi', 'posisi.id','=','activity.posisi_id')
+            ->join('sub_unit','sub_unit.id','=','activity.sub_id')
             ->where('sub_unit.id', $this->pilihan_1)
             ->get();
         

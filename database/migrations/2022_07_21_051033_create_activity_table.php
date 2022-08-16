@@ -52,11 +52,11 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->date('date_act');
             $table->string('desc_act', 255);
-            $table->string('output_act', 255);
             $table->integer('time_act');
             $table->integer('quantitiy_act');
             $table->string('status_act');
-            $table->binary('docs_act')->nullable();
+            $table->string('alasan_act')->nullable();
+            $table->string('docs_act')->nullable();
             $table->string('quant_desc');
             $table->softDeletes();
         });

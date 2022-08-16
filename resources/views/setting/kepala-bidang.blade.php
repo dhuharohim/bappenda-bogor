@@ -32,6 +32,11 @@ active
                                                 required>
                                         </div>
                                         <div class="mb-3">
+                                            <label for="NIK" class="form-label">{{ __('NIK*') }}</label>
+                                            <input type="text" class="form-control" id="NIK" name="NIK"
+                                                required placeholder="NIK">
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="username" class="form-label">{{ __('Username*') }}</label>
                                             <input type="email" class="form-control" id="email" name="email"
                                                 required placeholder="abc@gmail.com">
@@ -75,9 +80,9 @@ active
                                         <div class="form-group mb-3">
                                             <label class="form-label" for="Posisi">{{ __('Posisi') }}</label>
                                             <select name="posisi_id" id="posisi_id" class="form-control">
-                                               
+                                                <option value="" disabled selected class="form-control">{{ __('--Pilih Posisi--') }}</option>
                                                 @foreach($posisi as $posisi)
-                                                <option value="{{ $posisi->posisi_id }}">{{ $posisi->name_posisi }}</option>
+                                                <option value="{{ $posisi->id }}" class="form-control">{{ $posisi->name_posisi }}</option>
                                                
                                                 @endforeach
                                             </select>
@@ -85,7 +90,7 @@ active
                                         <div class="mb-3 form-group">
                                             <label for="hakAkses" class="form-label">{{ __('Hak Akses*') }}</label>
                                             <select name="role" id="role" class="form-control" readonly>
-                                                <option value="karyawan">{{ __('Pegawai') }}</option>
+                                              
                                             </select>
                                         </div>
                                         
@@ -107,27 +112,12 @@ active
 
 @section('custom_js')
     <script type="text/javascript">
-        var a = document.getElementsByClassName("number");
-        for (var i = 0; i < a.length; i++) {
-            a[i].innerHTML = (i + 1) + ".";
-        }
-
-        function html_to_xlsx(type) {
-            var data = document.getElementById('datatablesSimple');
-            var file = XLSX.utils.table_to_book(data, {
-                sheet: "sheet1"
-            });
-
-            XLSX.write(file, {
-                bookType: type,
-                bookSST: true,
-                type: 'base64'
-            });
-            XLSX.writeFile(file, 'file.' + type);
-        }
-        const export_xlsx = document.getElementById('export_xlsx');
-        export_xlsx.addEventListener('click', () => {
-            html_to_xlsx('xlsx');
+        $("#posisi_id").change(function() {
+            if ($(this).val() == "2") {
+                $('#role').append('<option selected value="kepala sub bidang">Kepala sub Bidang</option>');
+            } else if ($(this).val() == "3") {
+                $('#role').append('<option selected value="karyawan">Pegawai</option>');
+            }
         });
 
         function myFunction() {
@@ -139,13 +129,5 @@ active
             }
         }
 
-        function change1(){
-                var s1 = document.getElementById('posisi_id');
-                var s2 = document.getElementById('role');
-
-                if(s1.value == 1){
-                    s2.value == 
-                }
-        }
     </script>
 @endsection

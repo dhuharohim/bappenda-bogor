@@ -58,6 +58,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 {{ __('Daftar User') }}
                             </a>
+                            <a class="nav-link @yield('formSakit')" href="{{ route('sakit.index') }}"style="color:inherit">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                {{ __('Form Cuti/Sakit') }}
+                            </a>
 
                         </div>
                     </div>

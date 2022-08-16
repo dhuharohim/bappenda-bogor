@@ -9,7 +9,7 @@
         <div class="warp">
             <div class="container-fluid px-4">
                 <div class="card shadow mb-3 mt-4 w-auto ">
-                    <form action="{{ route('dashboard.update', ['id' => $profile->user_id]) }}" method="post">
+                    <form action="{{ route('dashboard.update', ['id' => $profile->user_id]) }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="card-header">
                             <a href="{{ route('dashboard.data') }}"
@@ -60,8 +60,21 @@
                                     </div>
                                     <div class=" form-group mb-3">
                                         <label for="quant_desc" class="form-label">{{ __('NIK*') }}</label>
-                                        <input type="number" class="form-control" id="nik" name="nik" required value="{{ $profile->nik }}">
+                                        <input type="number" class="form-control" id="nik" name="nik" required value="{{ $user->NIK }}" readonly>
                                     </div>
+                                    @if(isset($profile->docs_contract) == null)
+                                    <div class=" form-group mb-3">
+                                        <label for="quant_desc" class="form-label">{{ __('Upload Dokumen Kontrak*') }}</label>
+                                        <input type="file" class="form-control" id="docs_contract" name="docs_contract" >
+                                    </div>
+                                    @else
+                                    <div class=" form-group" style="margin-top: 2rem;">
+                                      
+                                        <input type="file" class="form-control" id="docs_contract" name="docs_contract" style="display: none;">
+                                        <label for="docs_contract">{{ $profile->docs_contract }}</label>
+                                        <a href="{{ url('/contract/download', $profile->id) }}" class="btn btn-outline-dark btn-sm">{{ __('download') }}</a>
+                                    </div>
+                                    @endif
 
                                 </div>
                             </div>

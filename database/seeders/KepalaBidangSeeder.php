@@ -18,17 +18,13 @@ class KepalaBidangSeeder extends Seeder
     {
         $user_id = DB::table('users')->where('role', 'kepala bidang')->get()->pluck('id');
         $faker = Faker::create();
-        $unit_id = DB::table('unit_kerja')->pluck('id');
+        $unit_id = DB::table('unit_kerja')->where('name_unit', 'Sekretariat')->pluck('id');
         $posisi_id = DB::table('posisi')->where('name_posisi', 'Kepala Bidang')->pluck('id');
         DB::table('kepala_bidang')->insert([
             'user_id' =>  $faker->randomElement($user_id),
             'unit_id' => $faker->randomElement($unit_id),
             'posisi_id' => $faker->randomElement($posisi_id),
         ]);
-        DB::table('kepala_bidang')->insert([
-            'user_id' =>  $faker->randomElement($user_id),
-            'unit_id' => $faker->randomElement($unit_id),
-            'posisi_id' => $faker->randomElement($posisi_id),
-        ]);
+     
     }
 }

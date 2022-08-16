@@ -35,6 +35,7 @@ class SettingController extends Controller
         $unit_bidang = UnitKerja::where('id', session('unit_id'))->get();
         $unit_sub = UnitKerja::where('id', session('sub_id'))->get();
         $posisi = Posisi::orderBy('id','DESC')->take(2)->get();
+        $posisi_admin = Posisi::all();
         $sub_unit = SubUnit::all();
         $subUnit_bidang = SubUnit::where('unit_id', session('unit_id'))->get();
         $subUnit = SubUnit::where('id', session('sub_id'))->get();
@@ -42,7 +43,7 @@ class SettingController extends Controller
         $profile_admin = ProfilAdmin::where('user_id', $user_id)->first();
         $profile_kepalaSubBidang = ProfilKepalaSubBidang::where('user_id',$user_id)->first();
         if(Auth::user()->role == "admin"){
-        return view('setting.index', ['sub_unit'=>$sub_unit,'profile'=>$profile,'user'=> $user, 'profile_admin'=>$profile_admin, 'user_role' => $user_role, 'unit'=>$unit, 'user_ed'=>$user_ed, 'posisi' => $posisi]);
+        return view('setting.index', ['sub_unit'=>$sub_unit,'profile'=>$profile,'user'=> $user, 'profile_admin'=>$profile_admin, 'user_role' => $user_role, 'unit'=>$unit, 'user_ed'=>$user_ed, 'posisi' => $posisi, 'posisi_admin' => $posisi_admin]);
 
         }elseif(Auth::user()->role == "kepala bidang"){
             return view('setting.kepala-bidang', ['profile_kepalaBidang'=> $profile_kepalaBidang, 'sub_unit'=>$subUnit_bidang,'profile'=>$profile,'user'=> $user, 'profile_admin'=>$profile_admin, 'user_role' => $user_role, 'unit'=>$unit_bidang, 'user_ed'=>$user_ed, 'posisi' => $posisi]);
@@ -77,19 +78,41 @@ class SettingController extends Controller
         $user_id->name = $request->name;
         $user_id->role = $request->role;
         $user_id->email = $request->email;
+        $user_id->NIK = $request->NIK;
         $user_id->password = Hash::make($request->password);
         $user_id->save();
 
-
-        $profile = new Profile;
-        $profile->fullname = $user_id->name;
-        $profile->user_id = $user_id->id;
-        $profile->unit_id = $request->unit_id;
-        $profile->sub_id = $request->sub_unit;
-        $profile->posisi_id = $request->posisi_id;
-        $profile->save();
-
-        return redirect()->back();
+        if($user_id->role == 'kepala bidang'){
+            $profile = new ProfilKepalaBidang;
+            $profile->fullname = $user_id->name;
+            $profile->user_id = $user_id->id;   
+            $profile->unit_id = $request->unit_id;
+            $profile->posisi_id = $request->posisi_id;
+            $profile->save();
+    
+            return redirect()->back();
+        } elseif($user_id->role == 'kepala sub bidang'){
+            $profile = new ProfilKepalaSubBidang;
+            $profile->fullname = $user_id->name;
+            $profile->user_id = $user_id->id;   
+            $profile->unit_id = $request->unit_id;
+            $profile->sub_id = $request->sub_unit;
+            $profile->posisi_id = $request->posisi_id;
+            $profile->save();
+    
+            return redirect()->back();
+        } elseif($user_id->role == 'karyawan'){
+            $profile = new Profile;
+            $profile->fullname = $user_id->name;
+            $profile->user_id = $user_id->id;   
+            $profile->unit_id = $request->unit_id;
+            $profile->sub_id = $request->sub_unit;
+            $profile->posisi_id = $request->posisi_id;
+            $profile->save();
+    
+            return redirect()->back();
+        }
+       
 
 
     }
@@ -100,9 +123,10 @@ class SettingController extends Controller
         $unit->name_unit = $request->name_unit;
         $unit->save();
 
-        $posisi = new Posisi;
-        $posisi->name_posisi = $request->name_posisi;
-        $posisi->save();
+        $sub = new SubUnit;
+        $sub->unit_id = $unit->id;
+        $sub->name_sub = $request->name_sub;
+        $sub->save();
         return redirect()->back();
 
 

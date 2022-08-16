@@ -127,6 +127,18 @@ class VerifikasiController extends Controller
         // return view('verifikasi.edit.index', ['data' => $data, 'profile' => $profile, 'user_id' => $user_id]);
     }
 
+    public function update_alasan(Request $request, $id)
+    {
+        $data = Activity::findOrFail($id);
+        $data->alasan_act = $request->alasan_act;
+        $data->update();
+        return redirect()->back();
+        // $user_id = Auth::user()->id;
+        // $profile = Profile::all();
+        // return view('verifikasi.edit.index', ['data' => $data, 'profile' => $profile, 'user_id' => $user_id]);
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *

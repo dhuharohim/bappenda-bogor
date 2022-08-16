@@ -53,11 +53,12 @@ class LoginController extends Controller
         $input = $request->all();
 
         $this->validate($request, [
-            'email' => 'required|email',
+            'NIK' => 'required',
             'password' => 'required',
+          
         ]);
 
-        if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password']))) {
+        if (auth()->attempt(array('NIK' => $input['NIK'], 'password' => $input['password']))) {
             if (auth()->user()->role == 'kepala bidang') {
                 $profile = ProfilKepalaBidang::where('user_id', auth()->user()->id)->first();
                 //namesub
@@ -110,6 +111,10 @@ class LoginController extends Controller
                 ]);
             } elseif (auth()->user()->role == 'kepala kantor') {
                 $profile = ProfilKepalaKantor::where('user_id', auth()->user()->id)->first();
+                
+                session([
+                    'user_id' => $profile->user_id
+                ]);
                 //no name unit
             }
 
@@ -120,7 +125,7 @@ class LoginController extends Controller
             }
         } else {
             return redirect()->route('login')
-                ->with('error', 'Email-Address And Password Are Wrong.');
+                ->with('error', 'Email-Address/NIK And Password Are Wrong.');
         }
     }
 
